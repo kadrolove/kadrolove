@@ -16,49 +16,6 @@
 <link rel="apple-touch-icon" href="favicon.png">
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"LocalBusiness","name":"kadrolove — фотограф и видеограф в Самаре","url":"https://kadrolove.ru","description":"Фотосессии, видеосъёмка и монтаж в Самаре. Фотограф, видеограф и оператор в Самаре: семейная, свадебная и детская фотосессия, съёмка видео, монтаж видео и ретушь фотографий в Photoshop.","areaServed":{"@type":"City","name":"Самара"},"telephone":"+79967432661","sameAs":["https://vk.ru/club241469425","https://t.me/LADYGAGAGABOOM"]}
-
-/* === РЕЖИМ СЕРДЕЧКА: логика === */
-var heartClicks=[],foolishTimer=null,foolishShown=false;
-function enterHeartMode(){
-  history.pushState({heartMode:1},'');
-  document.body.classList.add('heart-mode');
-  document.body.classList.remove('heart-inverted');
-  document.body.style.overflow='hidden';
-}
-function exitHeartMode(){
-  document.body.classList.remove('heart-mode','heart-inverted');
-  document.body.style.overflow='';
-  hideFoolish();
-  if(history.state&&history.state.heartMode){history.replaceState(null,'')}
-}
-function toggleHeartInvert(){
-  document.body.classList.toggle('heart-inverted');
-}
-function onCenterHeartClick(){
-  heartClicks++;
-  if(heartClicks>=32){showFoolish();heartClicks=0}
-  toggleHeartInvert();
-}
-function showFoolish(){
-  var b=document.getElementById('stopFoolish');
-  b.classList.add('show');
-  foolishShown=true;
-  clearTimeout(foolishTimer);
-  foolishTimer=setTimeout(hideFoolish,7000);
-}
-function hideFoolish(){
-  var b=document.getElementById('stopFoolish');
-  b.classList.remove('show');
-  foolishShown=false;
-  clearTimeout(foolishTimer);
-}
-/* клик по логотипу в шапке */
-document.querySelector('.logo').addEventListener('click',function(){enterHeartMode()});
-document.querySelector('.logo').style.cursor='pointer';
-/* обработка кнопки «назад» */
-window.addEventListener('popstate',function(){
-  if(document.body.classList.contains('heart-mode')){exitHeartMode()}
-});
 </script>
 <style>
 :root{--brown:#5a4a42;--terra:#c0745a;--terra2:#a05a44;--bg:#f7f2ec;--card:#fff;--line:#e6d9cf;--grad:linear-gradient(135deg,#e8cfc0 0%,#cfa88f 55%,#b98a6e 100%)}
@@ -286,10 +243,35 @@ body.heart-mode .center-heart{display:flex}
 @keyframes heartBeat{0%,100%{transform:scale(1)}14%{transform:scale(1.12)}28%{transform:scale(1)}42%{transform:scale(1.08)}56%{transform:scale(1)}}
 body.heart-mode.heart-inverted .center-heart svg{animation:heartBeatInv 1.2s ease-in-out infinite}
 @keyframes heartBeatInv{0%,100%{transform:scale(1)}14%{transform:scale(1.12)}28%{transform:scale(1)}42%{transform:scale(1.08)}56%{transform:scale(1)}}
-.stop-foolish{position:fixed;bottom:12px;left:50%;transform:translateX(-50%) translateY(60px);background:var(--terra);color:var(--bg);border:none;border-radius:20px;padding:7px 18px;font-size:12px;font-family:inherit;cursor:pointer;z-index:10000;opacity:0;transition:opacity .4s,transform .4s,background .25s,color .25s;pointer-events:none}
-.stop-foolish.show{opacity:1;transform:translateX(-50%) translateY(0);pointer-events:auto}
-body.heart-mode.heart-inverted .stop-foolish{background:var(--bg);color:var(--terra)}
-.stop-foolish:hover{opacity:.85}
+
+/* кнопка «Забронировать дату» в режиме сердечка */
+.heart-book-btn{
+  position:fixed;
+  left:50%;
+  top:calc(50% + clamp(80px,16vw,130px));
+  transform:translateX(-50%) translateY(20px);
+  z-index:10000;
+  background:var(--terra);
+  color:#fff;
+  border:none;
+  border-radius:30px;
+  padding:13px 32px;
+  font-size:15px;
+  font-family:inherit;
+  cursor:pointer;
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .4s, transform .4s, background .2s, color .2s;
+  white-space:nowrap;
+  box-shadow:0 8px 24px rgba(90,74,66,.18);
+}
+.heart-book-btn.show{opacity:1;transform:translateX(-50%) translateY(0);pointer-events:auto}
+.heart-book-btn:hover{background:var(--terra2)}
+body.heart-mode.heart-inverted .heart-book-btn{background:var(--bg);color:var(--terra)}
+body.heart-mode.heart-inverted .heart-book-btn:hover{background:#fff;color:var(--terra2)}
+
+/* в режиме сердечка модалка должна перекрывать сердечко и кнопку */
+body.heart-mode .modal.open{z-index:10001}
 </style>
 </head>
 <body>
@@ -398,6 +380,7 @@ body.heart-mode.heart-inverted .stop-foolish{background:var(--bg);color:var(--te
       <a class="ph-bg" href="#" onclick="openLB('img','6ex.webp');return false"><img src="6ex.webp" alt="Видеограф Самара — кадр из съёмки" loading="lazy" onerror="this.remove()"></a>
       <a class="ph-bg" href="#" onclick="openLB('img','7ex.webp');return false"><img src="7ex.webp" alt="Ретушь фотографий в Photoshop — до и после" loading="lazy" onerror="this.remove()"></a>
       <a class="ph-bg" href="#" onclick="openLB('img','8ex.webp');return false"><img src="8ex.webp" alt="Фотосессия на природе — Самара" loading="lazy" onerror="this.remove()"></a>
+      <a class="ph-bg" href="#" onclick="openLB('img','9ex.webp');return false"><img src="9ex.webp" alt="Фотосессия в Самаре — работа фотографа kadrolove" loading="lazy" onerror="this.remove()"></a>
     </div>
   </div>
 </section>
@@ -573,7 +556,7 @@ function closeLB(){
 function openGal(){
   history.pushState({gal:1},'');
   var i,first='',mer='';
-  for(i=1;i<=8;i++){first+='<a href="#" class="ph-bg" onclick="openLB(\'img\',\''+i+'ex.webp\');return false"><img src="'+i+'ex.webp" alt="Работа" loading="lazy" onerror="this.remove()"></a>'}
+  for(i=1;i<=9;i++){first+='<a href="#" class="ph-bg" onclick="openLB(\'img\',\''+i+'ex.webp\');return false"><img src="'+i+'ex.webp" alt="Работа" loading="lazy" onerror="this.remove()"></a>'}
   var dusha='';
   for(i=1;i<=24;i++){mer+='<a href="#" class="ph-bg" onclick="openLB(\'img\',\''+i+'meropriat.webp\');return false"><img src="'+i+'meropriat.webp" alt="Мероприятие" loading="lazy" onerror="this.remove()"></a>'}
   for(i=1;i<=24;i++){dusha+='<a href="#" class="ph-bg" onclick="openLB(\'img\',\''+i+'dlyadushi.webp\');return false"><img src="'+i+'dlyadushi.webp" alt="Для души" loading="lazy" onerror="this.remove()"></a>'}
@@ -600,39 +583,45 @@ document.querySelectorAll('.heart').forEach(function(h){h.addEventListener('clic
 document.querySelectorAll('#mnav a').forEach(function(a){a.addEventListener('click',function(){document.getElementById('mnav').classList.remove('open')})});
 
 /* === РЕЖИМ СЕРДЕЧКА: логика === */
-var heartClicks=[],foolishTimer=null,foolishShown=false;
+var heartClicks=0;
+var heartBookTimer=null;
 function enterHeartMode(){
   history.pushState({heartMode:1},'');
   document.body.classList.add('heart-mode');
   document.body.classList.remove('heart-inverted');
   document.body.style.overflow='hidden';
+  heartClicks=0;
+  hideHeartBookBtn();
 }
 function exitHeartMode(){
   document.body.classList.remove('heart-mode','heart-inverted');
   document.body.style.overflow='';
-  hideFoolish();
+  hideHeartBookBtn();
+  heartClicks=0;
   if(history.state&&history.state.heartMode){history.replaceState(null,'')}
 }
 function toggleHeartInvert(){
   document.body.classList.toggle('heart-inverted');
 }
+function showHeartBookBtn(){
+  var b=document.getElementById('heartBookBtn');
+  b.classList.add('show');
+  clearTimeout(heartBookTimer);
+  heartBookTimer=setTimeout(hideHeartBookBtn,4000);
+}
+function hideHeartBookBtn(){
+  var b=document.getElementById('heartBookBtn');
+  b.classList.remove('show');
+  clearTimeout(heartBookTimer);
+  heartBookTimer=null;
+}
 function onCenterHeartClick(){
   heartClicks++;
-  if(heartClicks>=50){showFoolish();heartClicks=0}
+  if(heartClicks>=17){
+    showHeartBookBtn();
+    heartClicks=0;
+  }
   toggleHeartInvert();
-}
-function showFoolish(){
-  var b=document.getElementById('stopFoolish');
-  b.classList.add('show');
-  foolishShown=true;
-  clearTimeout(foolishTimer);
-  foolishTimer=setTimeout(hideFoolish,7000);
-}
-function hideFoolish(){
-  var b=document.getElementById('stopFoolish');
-  b.classList.remove('show');
-  foolishShown=false;
-  clearTimeout(foolishTimer);
 }
 /* клик по логотипу в шапке */
 document.querySelector('.logo').addEventListener('click',function(){enterHeartMode()});
@@ -646,6 +635,6 @@ window.addEventListener('popstate',function(){
 <button class="center-heart" id="centerHeart" aria-label="Сердечко" onclick="onCenterHeartClick()">
   <svg viewBox="0 0 24 24"><path d="M12 20.5C7 16.5 3.5 13.2 3.5 9.6 3.5 7 5.5 5 8 5c1.6 0 3.1.8 4 2.1C12.9 5.8 14.4 5 16 5c2.5 0 4.5 2 4.5 4.6 0 3.6-3.5 6.9-8.5 10.9z"/></svg>
 </button>
-<button class="stop-foolish sans" id="stopFoolish" onclick="exitHeartMode()">Закончить заниматься ерундой</button>
+<button class="heart-book-btn sans" id="heartBookBtn" onclick="openModal()">Забронировать дату →</button>
 </body>
 </html>
